@@ -2,6 +2,7 @@ package com.niuwajun.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.niuwajun.pojo.req.WxReq;
+import com.niuwajun.service.WxMessageService;
 import com.niuwajun.utils.WeiXinMessageUtil;
 import com.niuwajun.weixin.aes.WXBizMsgCrypt;
 import org.dom4j.Document;
@@ -9,6 +10,7 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,6 +28,9 @@ import java.util.Map;
  */
 @RestController
 public class WxController {
+
+    @Resource
+    private WxMessageService wxMessageService;
 
     @RequestMapping("/hello")
     public String hello() {
@@ -70,6 +75,8 @@ public class WxController {
                 decryptMap = parseRequest(req.getInputStream());
                 System.out.println("明文: " + decryptMap);
             }
+            String message = wxMessageService.receiveAndResponseMessage(decryptMap);
+            return message;
         } catch (Exception e) {
             e.printStackTrace();
         }

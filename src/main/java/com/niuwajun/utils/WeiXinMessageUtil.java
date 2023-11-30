@@ -1,5 +1,7 @@
 package com.niuwajun.utils;
 
+import cn.hutool.core.util.XmlUtil;
+import com.niuwajun.pojo.model.wechat.result.TextResult;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -105,6 +107,5 @@ public class WeiXinMessageUtil {
         }
         return map;
     }
-
 
 }
