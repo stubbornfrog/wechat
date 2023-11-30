@@ -1,4 +1,4 @@
-package com.niuwajun.pojo.req;
+package com.niuwajun.pojo.req.wechat;
 
 import lombok.Data;
 

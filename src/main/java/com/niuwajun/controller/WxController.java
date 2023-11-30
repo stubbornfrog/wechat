@@ -1,7 +1,7 @@
 package com.niuwajun.controller;
 
 import cn.hutool.core.util.StrUtil;
-import com.niuwajun.pojo.req.WxReq;
+import com.niuwajun.pojo.req.wechat.WxReq;
 import com.niuwajun.service.WxMessageService;
 import com.niuwajun.utils.WeiXinMessageUtil;
 import com.niuwajun.weixin.aes.WXBizMsgCrypt;

@@ -1,16 +1,21 @@
 package com.niuwajun.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.niuwajun.chatgpt.CustomChatGpt;
 import com.niuwajun.pojo.enums.WxMessageTypeEnum;
 import com.niuwajun.pojo.model.wechat.message.TextMessage;
 import com.niuwajun.pojo.model.wechat.result.BaseResult;
 import com.niuwajun.pojo.model.wechat.result.TextResult;
 import com.niuwajun.service.WxMessageService;
 import com.niuwajun.utils.WeiXinMessageUtil;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Map;
+import java.util.Scanner;
 
 /**
  * @Author: zmm
@@ -20,21 +25,33 @@ import java.util.Map;
 @Service
 public class WxMessageServiceImpl implements WxMessageService {
 
+
     @Override
     public String receiveAndResponseMessage(Map<String, String> messageMap) {
-        // 发送方账号(用户方)
-        String fromUserName = messageMap.get("FromUserName");
-        // 接受方账号（公众号）
-        String toUserName = messageMap.get("ToUserName");
         // 消息类型
         String msgType = messageMap.get("MsgType");
-
         String jsonString = JSON.toJSONString(messageMap);
         //普通消息类型
         if (msgType.equals(WxMessageTypeEnum.REQ_MESSAGE_TYPE_TEXT.code)) {
             TextMessage message = JSON.parseObject(jsonString, TextMessage.class);
+            // 调用chatGpt
+            CloseableHttpClient httpClient = HttpClients.createDefault();
+            String apiKey = "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";
+            CustomChatGpt customChatGpt = new CustomChatGpt(apiKey);
+            // 根据自己的网络设置吧
+            customChatGpt.setResponseTimeout(5000);
+            long start = System.currentTimeMillis();
+            String answer = customChatGpt.getAnswer(httpClient, messageMap.get("Content").trim());
+            long end = System.currentTimeMillis();
+            System.out.println("该回答花费时间为：" + (end - start) / 1000.0 + "秒");
+            System.out.println(answer);
+            try {
+                httpClient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             // 返回消息
-            return buildTextMessage(toUserName, fromUserName, "傻狗，你好");
+            return buildTextMessage(messageMap.get("ToUserName"), messageMap.get("FromUserName"), answer);
         } else {
             return null;
         }
