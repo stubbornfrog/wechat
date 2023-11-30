@@ -1,0 +1,25 @@
+server:
+  tomcat:
+    accesslog:
+      enabled: true
+      pattern: '%a %t %H %S %r %B %D %s'
+    basedir: logs/tomcat
+    uri-encoding: utf-8
+    relaxed-query-chars: '[,],{,}'
+
+  port: 8080
+
+spring:
+  freemarker:
+    check-template-location: false
+  jackson:
+    time-zone: GMT+8
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 1000MB
+      enabled: true
+
+logging:
+  level:
+    com.arcvideo.amam.mapper.file: debug
