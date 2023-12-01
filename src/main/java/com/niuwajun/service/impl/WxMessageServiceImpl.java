@@ -2,10 +2,12 @@ package com.niuwajun.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.niuwajun.chatgpt.CustomChatGpt;
+import com.niuwajun.chatgpt.ErnieBot;
 import com.niuwajun.pojo.enums.WxMessageTypeEnum;
 import com.niuwajun.pojo.model.wechat.message.TextMessage;
 import com.niuwajun.pojo.model.wechat.result.BaseResult;
 import com.niuwajun.pojo.model.wechat.result.TextResult;
+import com.niuwajun.pojo.resp.ernie.ErnieChatResp;
 import com.niuwajun.service.WxMessageService;
 import com.niuwajun.utils.WeiXinMessageUtil;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -36,12 +38,17 @@ public class WxMessageServiceImpl implements WxMessageService {
             TextMessage message = JSON.parseObject(jsonString, TextMessage.class);
             // 调用chatGpt
             CloseableHttpClient httpClient = HttpClients.createDefault();
-            String apiKey = "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";
-            CustomChatGpt customChatGpt = new CustomChatGpt(apiKey);
-            // 根据自己的网络设置吧
-            customChatGpt.setResponseTimeout(5000);
             long start = System.currentTimeMillis();
-            String answer = customChatGpt.getAnswer(httpClient, messageMap.get("Content").trim());
+
+//            String apiKey = "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";
+//            CustomChatGpt customChatGpt = new CustomChatGpt(apiKey);
+//            // 根据自己的网络设置吧
+//            customChatGpt.setResponseTimeout(5000);
+//            String answer = customChatGpt.getAnswer(httpClient, messageMap.get("Content").trim());
+
+            ErnieBot ernieBot = new ErnieBot();
+            String answer = ernieBot.getAnswer(httpClient, messageMap.get("Content").trim());
+
             long end = System.currentTimeMillis();
             System.out.println("该回答花费时间为：" + (end - start) / 1000.0 + "秒");
             System.out.println(answer);
